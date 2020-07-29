@@ -1,0 +1,41 @@
+body{
+    text-align: center;
+    overflow: auto;
+}
+
+#calender{
+    margin:auto;
+}
+
+table tr td{
+    font-size: 35px;
+    padding: 20px;
+    border-radius: 25%;
+}
+
+th{
+    font-size: 30px;
+}
+
+.img-button-left{
+    background: url("./image//left.png");
+}
+
+#afterBtn:hover{
+    cursor: pointer;
+}
+
+#beforeBtn:hover{
+    cursor: pointer;
+}
+
+.clcikableTd:hover{
+    cursor: pointer;
+    background-color: yellow;
+}
+
+.container{
+    border: black solid 2px;
+
+    width: 720px;
+}
