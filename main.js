@@ -32,12 +32,10 @@ const buildCalendar = () => {
     while (1) {
         if (days - 1 === lastDate)
             break;
-
         if (cellCnt === 7) {
             row = tbody.insertRow();
             cellCnt = 0;
         }
-
         const cell = row.insertCell();
 
         cell.innerHTML = `
@@ -58,6 +56,25 @@ const buildCalendar = () => {
     }
 
     // 여기에 로컬스토리지로부터 불러온 데이터 세팅!
+    let evtDB;
+    if (evtDB = JSON.parse(localStorage.getItem(date.getFullYear()))) {
+        let curMonthEvtDB = evtDB.filter(evt => evt.month === date.getMonth());
+        curMonthEvtDB.forEach(evt => {
+            if (evt.type === 0) {
+                const node = document.createElement('div');
+                node.innerHTML = evt.title;
+                node.style.background = evt.rgb;
+                document.querySelector(`#day-${evt.val}`).children[1].appendChild(node);
+            } else {
+                for (let idx = evt.val.startDate; idx <= evt.val.lastDate; ++idx) {
+                    const node = document.createElement('div');
+                    node.innerHTML = evt.title;
+                    node.style.background = evt.rgb;
+                    document.querySelector(`#day-${idx}`).children[1].appendChild(node);
+                }
+            }
+        })
+    }
 
     // 이후 공백
     for (let idx = 1; idx <= 7 - cellCnt; ++idx) {
@@ -111,7 +128,7 @@ const addEvt = (e) => {
                 node.style.background = rgb;
                 e.target.children[1].appendChild(node);
 
-                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: date.getDate(), rgb: rgb });
+                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: date.getDate(), rgb: rgb, type: 0 });
             }
 
             // long
@@ -126,7 +143,7 @@ const addEvt = (e) => {
                     document.querySelector(`#day-${idx}`).children[1].appendChild(node);
                 }
 
-                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: { startDate: selectedDate, lastDate: randVal }, rgb: rgb });
+                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: { startDate: selectedDate, lastDate: randVal }, rgb: rgb, type: 1 });
             }
 
             localStorage.setItem(date.getFullYear(), JSON.stringify(tempArr));
