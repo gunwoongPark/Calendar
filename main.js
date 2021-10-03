@@ -57,6 +57,8 @@ const buildCalendar = () => {
         cellCnt += 1;
     }
 
+    // 여기에 로컬스토리지로부터 불러온 데이터 세팅!
+
     // 이후 공백
     for (let idx = 1; idx <= 7 - cellCnt; ++idx) {
         const cell = row.insertCell();
@@ -97,6 +99,10 @@ const addEvt = (e) => {
 
         if (modal.children[1].value !== '') {
             const rgb = getRandomRGB();
+            let tempArr;
+
+            if (!(tempArr = JSON.parse(localStorage.getItem(date.getFullYear()))))
+                tempArr = [];
 
             // daily
             if (document.querySelector('#daily').checked) {
@@ -104,10 +110,12 @@ const addEvt = (e) => {
                 node.innerHTML = modal.children[1].value;
                 node.style.background = rgb;
                 e.target.children[1].appendChild(node);
+
+                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: date.getDate(), rgb: rgb });
             }
 
             // long
-            if (document.querySelector('#long').checked) {
+            else {
                 const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
                 const randVal = Math.floor(Math.random() * (lastDate - selectedDate + 1) + selectedDate);
 
@@ -117,7 +125,12 @@ const addEvt = (e) => {
                     node.style.background = rgb;
                     document.querySelector(`#day-${idx}`).children[1].appendChild(node);
                 }
+
+                tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: { startDate: selectedDate, lastDate: randVal }, rgb: rgb });
             }
+
+            localStorage.setItem(date.getFullYear(), JSON.stringify(tempArr));
+
             modal.children[1].value = ""
         }
     }
