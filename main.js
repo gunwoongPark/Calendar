@@ -11,11 +11,23 @@ const buildCalendar = () => {
     date.setMonth(date.getMonth(), 1);
     let cellCnt = date.getDay();
 
+    // 이전 공백
+    const prevMonthLast = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
     let row = tbody.insertRow();
-    for (let idx = 0; idx < cellCnt; ++idx) {
-        row.insertCell();
+    for (let idx = prevMonthLast - (cellCnt - 1); idx <= prevMonthLast; ++idx) {
+        const cell = row.insertCell();
+
+        cell.innerHTML = `
+        <div class="day-container">
+            <p>${idx}</p>
+            <div class="event-container">
+            </div>
+        </div>
+        `
+        cell.children[0].children[0].style.color = "lightgray"
     }
 
+    // 달력 채우기
     while (1) {
         if (days - 1 === lastDate)
             break;
@@ -44,8 +56,21 @@ const buildCalendar = () => {
         cellCnt += 1;
     }
 
-    for (let idx = cellCnt; idx < 6; ++idx) {
-        row.insertCell();
+    console.log(7 - cellCnt)
+
+
+    // 이후 공백
+    for (let idx = 1; idx <= 7 - cellCnt; ++idx) {
+        const cell = row.insertCell();
+
+        cell.innerHTML = `
+        <div class="day-container">
+            <p>${idx}</p>
+            <div class="event-container">
+            </div>
+        </div>
+        `
+        cell.children[0].children[0].style.color = "lightgray"
     }
 }
 
@@ -102,6 +127,5 @@ const init = () => {
     document.querySelector('.next').addEventListener('click', changeMonth);
 }
 
-// Date 객체 선언
 let date = new Date();
 init();
