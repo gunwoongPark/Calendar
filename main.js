@@ -1,18 +1,15 @@
 const buildCalendar = () => {
     const tbody = document.querySelector('tbody');
-    // date 객체 선언
-    let date = new Date();
+    const date = new Date();
 
     document.querySelector('.month').innerHTML = date.getMonth() + 1;
     document.querySelector('.year').innerHTML = date.getFullYear();
 
-    let lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     let days = 1;
-    // 해당 월의 1일이 무슨 요일인지 파악하기 위해 설정
     date.setMonth(date.getMonth(), 1);
     let cellCnt = date.getDay();
 
-    // 공백 칸 형성
     let row = tbody.insertRow();
     for (let idx = 0; idx < cellCnt; ++idx) {
         row.insertCell();
@@ -27,7 +24,7 @@ const buildCalendar = () => {
             cellCnt = 0;
         }
 
-        let cell = row.insertCell();
+        const cell = row.insertCell();
 
         cell.innerHTML = `
         <div class="day-container">
@@ -36,7 +33,7 @@ const buildCalendar = () => {
             </div>
         </div>
         `
-        cell.addEventListener('click', addSch)
+        cell.addEventListener('click', addEvt)
 
         if (cellCnt === 0 || cellCnt === 6) {
             cell.children[0].children[0].style.color = "red"
@@ -51,7 +48,7 @@ const buildCalendar = () => {
     }
 }
 
-const addSch = (e) => {
+const addEvt = (e) => {
     if (e.target.className !== 'day-container')
         return;
 
@@ -82,10 +79,30 @@ const addSch = (e) => {
             modal.children[1].value = ""
         }
     }
+
+    document.querySelector('.dim').onclick = () => {
+        modal.style.visibility = 'hidden';
+        dim.style.visibility = 'hidden';
+    }
+}
+
+const changeMonth = (e) => {
+    const date = new Date();
+    console.log(date.getMonth())
+
+    if (e.target.className === "prev") {
+
+    }
+    else {
+        console.log('next!')
+    }
 }
 
 const init = () => {
+    const date = new Date();
     buildCalendar();
+    document.querySelector('.prev').addEventListener('click', changeMonth);
+    document.querySelector('.next').addEventListener('click', changeMonth);
 }
 
 init();
