@@ -1,6 +1,7 @@
 const buildCalendar = () => {
     const tbody = document.querySelector('tbody');
-    const date = new Date();
+
+    tbody.innerHTML = ""
 
     document.querySelector('.month').innerHTML = date.getMonth() + 1;
     document.querySelector('.year').innerHTML = date.getFullYear();
@@ -55,8 +56,6 @@ const addEvt = (e) => {
     const dim = document.querySelector('.dim');
     const modal = document.querySelector('.modal-container');
 
-    const date = new Date();
-
     date.setMonth(date.getMonth(), parseInt(e.target.children[0].innerHTML));
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -87,22 +86,22 @@ const addEvt = (e) => {
 }
 
 const changeMonth = (e) => {
-    const date = new Date();
-    console.log(date.getMonth())
-
     if (e.target.className === "prev") {
-
+        date = new Date(date.getFullYear(), date.getMonth() - 1);
+        buildCalendar();
     }
     else {
-        console.log('next!')
+        date = new Date(date.getFullYear(), date.getMonth() + 1);
+        buildCalendar();
     }
 }
 
 const init = () => {
-    const date = new Date();
-    buildCalendar();
+    buildCalendar(date.getMonth());
     document.querySelector('.prev').addEventListener('click', changeMonth);
     document.querySelector('.next').addEventListener('click', changeMonth);
 }
 
+// Date 객체 선언
+let date = new Date();
 init();
