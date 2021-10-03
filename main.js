@@ -1,6 +1,5 @@
 const buildCalendar = () => {
     const tbody = document.querySelector('tbody');
-    tbody.addEventListener('click', addSch)
     // date 객체 선언
     let date = new Date();
 
@@ -29,13 +28,19 @@ const buildCalendar = () => {
         }
 
         let cell = row.insertCell();
-        if (cellCnt === 6) {
-            cell.style.color = "blue"
+
+        cell.innerHTML = `
+        <div class="day-container">
+            <p>${days}</p>
+            <div class="event-container">
+            </div>
+        </div>
+        `
+        cell.addEventListener('click', addSch)
+
+        if (cellCnt === 0 || cellCnt === 6) {
+            cell.children[0].children[0].style.color = "red"
         }
-        else if (cellCnt === 0) {
-            cell.style.color = "red"
-        }
-        cell.innerHTML = days;
 
         days += 1;
         cellCnt += 1;
@@ -47,8 +52,20 @@ const buildCalendar = () => {
 }
 
 const addSch = (e) => {
+    if (e.target.className !== 'day-container')
+        return;
+
     const dim = document.querySelector('.dim');
     const modal = document.querySelector('.modal-container');
+
+    const date = new Date();
+
+    date.setMonth(date.getMonth(), parseInt(e.target.children[0].innerHTML));
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+    modal.children[0].innerHTML = `${dayNames[date.getDay()]}, ${parseInt(e.target.children[0].innerHTML)} ${monthNames[date.getMonth()]}`;
 
     dim.style.visibility = 'visible'
     modal.style.visibility = 'visible'
@@ -56,6 +73,14 @@ const addSch = (e) => {
     document.querySelector('.confirm').onclick = () => {
         modal.style.visibility = 'hidden';
         dim.style.visibility = 'hidden';
+
+        if (modal.children[1].value !== '') {
+            const node = document.createElement('div');
+            node.innerHTML = modal.children[1].value
+            e.target.children[1].appendChild(node);
+
+            modal.children[1].value = ""
+        }
     }
 }
 
