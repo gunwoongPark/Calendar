@@ -55,7 +55,7 @@ const buildCalendar = () => {
         cellCnt += 1;
     }
 
-    // 여기에 로컬스토리지로부터 불러온 데이터 세팅!
+    // 로컬스토리지로부터 불러온 데이터 세팅
     let evtDB;
     if (evtDB = JSON.parse(localStorage.getItem(date.getFullYear()))) {
         let curMonthEvtDB = evtDB.filter(evt => evt.month === date.getMonth());
@@ -145,17 +145,20 @@ const addEvt = (e) => {
 
                 tempArr.push({ title: modal.children[1].value, month: date.getMonth(), val: { startDate: selectedDate, lastDate: randVal }, rgb: rgb, type: 1 });
             }
-
             localStorage.setItem(date.getFullYear(), JSON.stringify(tempArr));
 
-            modal.children[1].value = ""
+            modal.children[1].value = "";
+            document.querySelector('#daily').checked = true;
         }
+        else document.querySelector('#daily').checked = true;
     }
 
     // 모달 닫기(딤처리)
     document.querySelector('.dim').onclick = () => {
         modal.style.visibility = 'hidden';
         dim.style.visibility = 'hidden';
+        modal.children[1].value = "";
+        document.querySelector('#daily').checked = true;
     }
 }
 
