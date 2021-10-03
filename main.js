@@ -56,9 +56,6 @@ const buildCalendar = () => {
         cellCnt += 1;
     }
 
-    console.log(7 - cellCnt)
-
-
     // 이후 공백
     for (let idx = 1; idx <= 7 - cellCnt; ++idx) {
         const cell = row.insertCell();
@@ -98,6 +95,7 @@ const addEvt = (e) => {
         if (modal.children[1].value !== '') {
             const node = document.createElement('div');
             node.innerHTML = modal.children[1].value
+            node.style.background = getRandomRGB();
             e.target.children[1].appendChild(node);
 
             modal.children[1].value = ""
@@ -108,6 +106,13 @@ const addEvt = (e) => {
         modal.style.visibility = 'hidden';
         dim.style.visibility = 'hidden';
     }
+}
+
+const getRandomRGB = () => {
+    const R = Math.random() * 255;
+    const G = Math.random() * 255;
+    const B = Math.random() * 255;
+    return `rgb(${R}, ${G}, ${B})`;
 }
 
 const changeMonth = (e) => {
