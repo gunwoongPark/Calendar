@@ -1,3 +1,4 @@
+// 달력 생성
 const buildCalendar = () => {
     const tbody = document.querySelector('tbody');
 
@@ -40,7 +41,7 @@ const buildCalendar = () => {
         const cell = row.insertCell();
 
         cell.innerHTML = `
-        <div class="day-container">
+        <div id="day-${days}" class="day-container">
             <p>${days}</p>
             <div class="event-container">
             </div>
@@ -71,19 +72,21 @@ const buildCalendar = () => {
     }
 }
 
+// 일정 추가
 const addEvt = (e) => {
     if (e.target.className !== 'day-container')
         return;
 
     const dim = document.querySelector('.dim');
     const modal = document.querySelector('.modal-container');
+    const selectedDate = parseInt(e.target.children[0].innerHTML)
 
-    date.setMonth(date.getMonth(), parseInt(e.target.children[0].innerHTML));
+    date.setMonth(date.getMonth(), selectedDate);
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-    modal.children[0].innerHTML = `${dayNames[date.getDay()]}, ${parseInt(e.target.children[0].innerHTML)} ${monthNames[date.getMonth()]}`;
+    modal.children[0].innerHTML = `${dayNames[date.getDay()]}, ${selectedDate} ${monthNames[date.getMonth()]}`;
 
     dim.style.visibility = 'visible'
     modal.style.visibility = 'visible'
@@ -93,21 +96,40 @@ const addEvt = (e) => {
         dim.style.visibility = 'hidden';
 
         if (modal.children[1].value !== '') {
-            const node = document.createElement('div');
-            node.innerHTML = modal.children[1].value
-            node.style.background = getRandomRGB();
-            e.target.children[1].appendChild(node);
+            const rgb = getRandomRGB();
 
+            // daily
+            if (document.querySelector('#daily').checked) {
+                const node = document.createElement('div');
+                node.innerHTML = modal.children[1].value;
+                node.style.background = rgb;
+                e.target.children[1].appendChild(node);
+            }
+
+            // long
+            if (document.querySelector('#long').checked) {
+                const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+                const randVal = Math.floor(Math.random() * (lastDate - selectedDate + 1) + selectedDate);
+
+                for (let idx = selectedDate; idx <= randVal; ++idx) {
+                    const node = document.createElement('div');
+                    node.innerHTML = modal.children[1].value;
+                    node.style.background = rgb;
+                    document.querySelector(`#day-${idx}`).children[1].appendChild(node);
+                }
+            }
             modal.children[1].value = ""
         }
     }
 
+    // 모달 닫기(딤처리)
     document.querySelector('.dim').onclick = () => {
         modal.style.visibility = 'hidden';
         dim.style.visibility = 'hidden';
     }
 }
 
+// 랜덤 RGB
 const getRandomRGB = () => {
     const R = Math.random() * 255;
     const G = Math.random() * 255;
@@ -115,6 +137,7 @@ const getRandomRGB = () => {
     return `rgb(${R}, ${G}, ${B})`;
 }
 
+// 화살표 버튼을 통한 월 변경
 const changeMonth = (e) => {
     if (e.target.className === "prev") {
         date = new Date(date.getFullYear(), date.getMonth() - 1);
@@ -125,6 +148,8 @@ const changeMonth = (e) => {
         buildCalendar();
     }
 }
+
+// *** //
 
 const init = () => {
     buildCalendar(date.getMonth());
